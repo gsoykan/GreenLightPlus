@@ -12,6 +12,10 @@ from .rh2vapor_dens import rh2vapor_dens
 from .co2_ppm2dens import co2_ppm2dens
 from .rh2vapor_dens import rh2vapor_dens
 
+from service_functions.co2_ppm2dens import co2_ppm2dens
+from service_functions.rh2vapor_dens import rh2vapor_dens
+from service_functions.vapor_dens2pres import vapor_dens2pres
+
 
 def correct_hour_24(time_str):
     """

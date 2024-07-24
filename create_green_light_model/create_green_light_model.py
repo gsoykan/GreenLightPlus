@@ -28,7 +28,7 @@ from .set_gl_time import set_gl_time  # For setting GreenLight time
 from .set_default_lamp_params import set_default_lamp_params  # For setting default lamp parameters
 from .set_gl_control_init import set_gl_control_init  # For initializing GreenLight control
 from .set_gl_states_init import set_gl_states_init  # For initializing GreenLight model
-from ..service_functions.funcs import *  # Import all functions from funcs module
+from service_functions.funcs import *  # Import all functions from funcs module
 
 
 def create_green_light_model(lampType, weather, controls=None, indoor=None):

@@ -179,7 +179,6 @@ GreenLightPlus 包允许用户使用原始 GreenLight 模型进行温室模拟�
 
 首先，从 GreenLightPlus 包中导入必要的模块和函数。
 
-
 ```python
 from GreenLightPlus import (
     GreenLightModel,
@@ -198,7 +197,7 @@ first_day = 91  # 生长周期的第一天（一年中的第几天）
 # - first_day: 模拟开始的日期（一年中的第几天）
 # - isMature: 表示作物是否已经成熟
 # - epw_path: 气象数据文件的路径
-model = GreenLightModel(first_day=first_day, isMature=True, epw_path="NLD_Amsterdam.062400_IWEC.epw")
+model = GreenLightModel(first_day=first_day, isMature=True, epw_path="data/NLD_Amsterdam.062400_IWEC.epw")
 
 # 初始化累计变量
 total_yield = 0  # 总产量(kg/m2)
@@ -295,7 +294,6 @@ GreenLightPlus 整合了 GreenLight 模型和 EnergyPlus，提供温室环境模
 
 首先，确保您已将 EnergyPlus 安装目录添加到 Python 模块的搜索路径中。然后从 GreenLightPlus 包导入所需的模块和功能。
 
-
 ```python
 import sys
 # 添加EnergyPlus安装目录到Python模块搜索路径
@@ -309,7 +307,7 @@ if __name__ == "__main__":
     api = EnergyPlusAPI()
 
     # 设置天气文件和模型文件的路径
-    epw_path = "NLD_Amsterdam.062400_IWEC.epw"
+    epw_path = "data/NLD_Amsterdam.062400_IWEC.epw"
     idf_path = "data/model_files/greenhouse_half_circle.idf"
 
     # 将EPW天气文件转换为CSV文件，便于处理

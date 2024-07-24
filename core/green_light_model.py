@@ -20,20 +20,20 @@ from datetime import datetime  # Import datetime for date and time operations
 from scipy.integrate import solve_ivp  # Import solve_ivp from scipy.integrate for solving initial value problems for ODE systems
 
 # Import necessary functions and classes from service_functions and create_green_light_model modules
-from ..service_functions.funcs import *
-from ..service_functions.cut_energy_plus_data import cut_energy_plus_data, cut_energy_plus_data_csv, cut_energy_plus_data_csv_extreme
-from ..service_functions.make_artificial_input import make_artificial_input
-from ..service_functions.funcs import (
+from service_functions.funcs import *
+from service_functions.cut_energy_plus_data import cut_energy_plus_data, cut_energy_plus_data_csv, cut_energy_plus_data_csv_extreme
+from service_functions.make_artificial_input import make_artificial_input
+from service_functions.funcs import (
     calculate_energy_consumption,
     extract_last_value_from_nested_dict,
 )
-from ..create_green_light_model.ode import ODESolver
-from ..create_green_light_model.set_params4ha_world_comparison import set_params4ha_world_comparison
-from ..create_green_light_model.create_green_light_model import create_green_light_model
-from ..create_green_light_model.set_dep_params import set_dep_params
-from ..create_green_light_model.change_res import change_res
-from ..create_green_light_model.set_gl_aux import set_gl_aux
-from ..service_functions.convert_epw2csv import convert_epw2csv,check_csv
+from create_green_light_model.ode import ODESolver
+from create_green_light_model.set_params4ha_world_comparison import set_params4ha_world_comparison
+from create_green_light_model.create_green_light_model import create_green_light_model
+from create_green_light_model.set_dep_params import set_dep_params
+from create_green_light_model.change_res import change_res
+from create_green_light_model.set_gl_aux import set_gl_aux
+from service_functions.convert_epw2csv import convert_epw2csv, check_csv
 
 class GreenLightModel:
     """

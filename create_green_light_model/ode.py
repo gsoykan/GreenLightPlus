@@ -17,7 +17,7 @@ This code is licensed under the GNU GPLv3 License. For details, see the LICENSE 
 """
 
 # Import necessary modules and functions
-from ..service_functions.funcs import *
+from service_functions.funcs import *
 from .set_gl_aux import set_gl_aux
 from .set_gl_control import set_gl_control
 from .set_gl_odes import set_gl_odes

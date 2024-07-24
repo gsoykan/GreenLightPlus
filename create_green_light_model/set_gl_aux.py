@@ -1,7 +1,7 @@
 import copy
 import numpy as np
-from ..service_functions.funcs import *
-from ..service_functions.co2_dens2ppm import co2_dens2ppm
+from service_functions.funcs import *
+from service_functions.co2_dens2ppm import co2_dens2ppm
 
 class GreenLightAuxiliaryStates:
     def __init__(self, gl):

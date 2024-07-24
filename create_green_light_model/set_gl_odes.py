@@ -16,7 +16,7 @@ This code is licensed under the GNU GPLv3 License. For details, see the LICENSE 
 """
 
 
-from ..service_functions.funcs import ifElse
+from service_functions.funcs import ifElse
 
 
 def set_gl_odes(gl):
