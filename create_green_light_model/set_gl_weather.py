@@ -18,9 +18,9 @@ This code is licensed under the GNU GPLv3 License. For details, see the LICENSE 
 import numpy as np  # Import NumPy for numerical operations
 import datetime  # Import datetime module for date and time operations
 from datetime import timedelta  # Import timedelta for time calculations
-from ..service_functions.vapor_dens2pres import vapor_dens2pres  # Import function to convert vapor density to pressure
-from ..service_functions.rh2vapor_dens import rh2vapor_dens  # Import function to convert relative humidity to vapor density
-from ..service_functions.day_light_sum import day_light_sum  # Import function to calculate daily light sum
+from service_functions.vapor_dens2pres import vapor_dens2pres  # Import function to convert vapor density to pressure
+from service_functions.rh2vapor_dens import rh2vapor_dens  # Import function to convert relative humidity to vapor density
+from service_functions.day_light_sum import day_light_sum  # Import function to calculate daily light sum
 
 class GreenLightWeather:
     """

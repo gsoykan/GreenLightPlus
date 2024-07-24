@@ -187,7 +187,7 @@ first_day = 91  # First day of the growth cycle (day of the year)
 # - first_day: Start date of the simulation (day of the year)
 # - isMature: Indicates whether the crop is mature
 # - epw_path: Path to the weather data file
-model = GreenLightModel(first_day=first_day, isMature=True, epw_path="NLD_Amsterdam.062400_IWEC.epw")
+model = GreenLightModel(first_day=first_day, isMature=True, epw_path="data/NLD_Amsterdam.062400_IWEC.epw")
 
 # Initialize cumulative variables
 total_yield = 0  # Total yield (kg/m2)
@@ -299,7 +299,7 @@ if __name__ == "__main__":
     api = EnergyPlusAPI()
 
     # Set the paths for the weather file and model file
-    epw_path = "NLD_Amsterdam.062400_IWEC.epw"
+    epw_path = "data/NLD_Amsterdam.062400_IWEC.epw"
     idf_path = "data/model_files/greenhouse_half_circle.idf"
 
     # Convert the EPW weather file to a CSV file for easier processing

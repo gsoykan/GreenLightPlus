@@ -9,6 +9,10 @@ from scipy.interpolate import pchip_interpolate
 import glob
 from typing import Union, Tuple, List, Dict
 
+from service_functions.co2_ppm2dens import co2_ppm2dens
+from service_functions.rh2vapor_dens import rh2vapor_dens
+from service_functions.vapor_dens2pres import vapor_dens2pres
+
 
 def correct_hour_24(time_str):
     """
@@ -279,10 +283,10 @@ def compute_additional_data(epw_data: pd.DataFrame, df: pd.DataFrame) -> Tuple[n
     radSky = epw_data["Horizontal Infrared Radiation Intensity (J/m²)"]
 
     # Compute vapor density using temperature and relative humidity
-    vaporDens = rh2vaporDens(temp, rh)
+    vaporDens = rh2vapor_dens(temp, rh)
 
     # Compute CO2 density assuming a constant concentration of 410 ppm
-    co2 = co2ppm2dens(temp, 410)
+    co2 = co2_ppm2dens(temp, 410)
 
     # Compute sky temperature from sky radiation
     skyT = (radSky / SIGMA) ** 0.25 - KELVIN
@@ -358,7 +362,7 @@ def combine_all_data(epw_data: pd.DataFrame, vaporDens: np.ndarray, co2: np.ndar
     expanded_daily_rad_sum_shifted[-1] = 0  # Set the last value to 0
 
     # Calculate vapor pressure from vapor density and temperature
-    vapor_pressure = vaporDens2pres(
+    vapor_pressure = vapor_dens2pres(
         epw_data["Dry Bulb Temperature (°C)"], vaporDens)
 
     # Create a new DataFrame to combine all weather parameters

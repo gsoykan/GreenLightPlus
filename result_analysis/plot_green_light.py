@@ -21,10 +21,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime, timedelta
-from ..service_functions.funcs import *
-from ..service_functions.vp2dens import vp2dens
-from ..service_functions.rh2vapor_dens import rh2vapor_dens
-from ..service_functions.co2_dens2ppm import co2_dens2ppm
+from service_functions.funcs import *
+from service_functions.vp2dens import vp2dens
+from service_functions.rh2vapor_dens import rh2vapor_dens
+from service_functions.co2_dens2ppm import co2_dens2ppm
 
 
 def plot_green_light(gl):

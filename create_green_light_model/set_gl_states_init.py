@@ -18,7 +18,7 @@ This code is licensed under the GNU GPLv3 License. For details, see the LICENSE 
 
 import numpy as np
 
-from ..service_functions.funcs import satVp
+from service_functions.funcs import satVp
 from .set_gl_states import set_gl_states  # For setting GreenLight states
 
 def set_gl_states_init(gl, weather_datenum, indoor=None):

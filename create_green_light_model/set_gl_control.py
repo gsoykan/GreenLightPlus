@@ -18,7 +18,7 @@ This code is licensed under the GNU GPLv3 License. For details, see the LICENSE 
 
 import numpy as np
 
-from ..service_functions.funcs import proportionalControl
+from service_functions.funcs import proportionalControl
 
 def set_gl_control(gl):
     a = gl["a"]
