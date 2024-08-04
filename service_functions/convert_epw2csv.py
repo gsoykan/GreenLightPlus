@@ -8,6 +8,7 @@ from scipy.optimize import minimize
 from scipy.interpolate import pchip_interpolate
 import glob
 from typing import Union, Tuple, List, Dict
+from .rh2vapor_dens import rh2vapor_dens
 
 from service_functions.co2_ppm2dens import co2_ppm2dens
 from service_functions.rh2vapor_dens import rh2vapor_dens
@@ -37,8 +38,6 @@ def correct_hour_24(time_str):
     else:
         # If the time part is not '24:00', return the original time string
         return time_str
-
-
 
 
 
