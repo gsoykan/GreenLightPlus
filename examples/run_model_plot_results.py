@@ -4,7 +4,7 @@ from service_functions.funcs import extract_last_value_from_nested_dict, calcula
 
 # Set simulation parameters
 season_length = 10  # Length of the growth cycle (days), can be fractional
-season_interval = 10  # Time interval for each model run (days), can be fractional, e.g., 1/24/4 means 15 minutes
+season_interval = 2  # Time interval for each model run (days), can be fractional, e.g., 1/24/4 means 15 minutes
 first_day = 91  # The first day of the growth cycle (day of the year)
 
 if __name__ == '__main__':
@@ -82,3 +82,23 @@ print(f"Energy consumption per unit: {(lampIn + boilIn) / total_yield:.2f} MJ/kg
 
 # Plot model results
 plot_green_light(gl)
+
+# results with season interval 2
+# Start with a mature crop
+# Current yield: 0.57 kg/m2
+# Current yield: 0.61 kg/m2
+# Current yield: 0.66 kg/m2
+# Current yield: 0.69 kg/m2
+# Current yield: 0.69 kg/m2
+# Total yield: 3.22 kg/m2
+# Lighting energy consumption: 33.94 MJ/m2
+# Heating energy consumption: 33.46 MJ/m2
+# Energy consumption per unit: 20.92 MJ/kg
+
+# results with season interval 10
+# Start with a mature crop
+# Current yield: 3.22 kg/m2
+# Total yield: 3.22 kg/m2
+# Lighting energy consumption: 34.02 MJ/m2
+# Heating energy consumption: 33.68 MJ/m2
+# Energy consumption per unit: 21.00 MJ/kg
