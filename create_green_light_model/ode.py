@@ -15,7 +15,9 @@ Author's email: qiu.daidai@outlook.com, daidai.qiu@wur.nl
 
 This code is licensed under the GNU GPLv3 License. For details, see the LICENSE file.
 """
+from typing import Optional
 
+from gl_net.io_recorder import IORecorder
 # Import necessary modules and functions
 from service_functions.funcs import *
 from .set_gl_aux import set_gl_aux
@@ -23,10 +25,12 @@ from .set_gl_control import set_gl_control
 from .set_gl_odes import set_gl_odes
 import copy
 import numpy as np
+
 np.seterr(invalid="ignore", over="ignore")  # Set numpy to ignore invalid and overflow warnings
 
+
 class ODESolver:
-    def __init__(self, d, u, gl):
+    def __init__(self, d, u, gl, io_recorder: Optional[IORecorder] = None):
         """
         Initialize the ODESolver class
         :param u: Control variable matrix
@@ -37,6 +41,8 @@ class ODESolver:
         self.u = u  # Store the control variable matrix
         self.prev_gl = {}  # Initialize dict to store previous GreenLight model instance
 
+        self.io_recorder = io_recorder
+
     def convert_dict_to_array(self, data_dict):
         """
         Convert dictionary data to a 2D NumPy array
@@ -45,17 +51,17 @@ class ODESolver:
         """
         keys = list(data_dict.keys())  # Get all keys of the dictionary
         num_rows = data_dict[keys[0]].shape[0]  # Get number of rows from the first array
-        
+
         # Check if all arrays have the same number of rows
         for key in keys:
             if data_dict[key].shape[0] != num_rows:
                 raise ValueError("All arrays must have the same number of rows")
-        
+
         # Build the result array
         result_array = data_dict[keys[0]]
         for key in keys[1:]:
             result_array = np.hstack((result_array, data_dict[key][:, 1:]))
-        
+
         return result_array
 
     def sample_d(self, t):
@@ -109,7 +115,7 @@ class ODESolver:
         keys_to_check = ["tBlScr", "tThScr", "tIntLamp", "tCovIn", "time"]
         values_to_check = np.array([self.gl["x"][key] for key in keys_to_check])
         inf_indices = np.isinf(values_to_check)
-        
+
         if np.any(inf_indices):
             for idx, key in enumerate(keys_to_check):
                 if inf_indices[idx]:
@@ -124,8 +130,16 @@ class ODESolver:
         # Recalculate values of auxiliary variables
         self.gl = set_gl_aux(self.gl)
 
+        if self.io_recorder is not None:
+            gl_snapshot = copy.deepcopy(self.gl)
+
         # Calculate ODE values
         dx_list = set_gl_odes(self.gl)
+
+        if self.io_recorder is not None:
+            self.io_recorder.append_element(gl_snapshot,
+                                            dx_list,
+                                            t)
 
         # Update prev_gl
         self.prev_gl["x"] = self.gl["x"].copy()

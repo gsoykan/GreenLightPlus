@@ -9,7 +9,6 @@ Author's email: qiu.daidai@outlook.com
 This code is licensed under the GNU GPLv3 License. For details, see the LICENSE file.
 """
 
-
 import os  # Import the os module for file and path operations
 import copy  # Import the copy module for creating deep copies of objects
 import time as tm  # Import the time module as tm for time-related operations
@@ -17,11 +16,14 @@ import numpy as np  # Import numpy for numerical operations
 import pandas as pd  # Import pandas for data manipulation and analysis
 
 from datetime import datetime  # Import datetime for date and time operations
-from scipy.integrate import solve_ivp  # Import solve_ivp from scipy.integrate for solving initial value problems for ODE systems
+from scipy.integrate import \
+    solve_ivp  # Import solve_ivp from scipy.integrate for solving initial value problems for ODE systems
 
+from gl_net.io_recorder import IORecorder
 # Import necessary functions and classes from service_functions and create_green_light_model modules
 from service_functions.funcs import *
-from service_functions.cut_energy_plus_data import cut_energy_plus_data, cut_energy_plus_data_csv, cut_energy_plus_data_csv_extreme
+from service_functions.cut_energy_plus_data import cut_energy_plus_data, cut_energy_plus_data_csv, \
+    cut_energy_plus_data_csv_extreme
 from service_functions.make_artificial_input import make_artificial_input
 from service_functions.funcs import (
     calculate_energy_consumption,
@@ -34,6 +36,7 @@ from create_green_light_model.set_dep_params import set_dep_params
 from create_green_light_model.change_res import change_res
 from create_green_light_model.set_gl_aux import set_gl_aux
 from service_functions.convert_epw2csv import convert_epw2csv, check_csv
+
 
 class GreenLightModel:
     """
@@ -56,15 +59,15 @@ class GreenLightModel:
     """
 
     def __init__(
-        self,
-        filename="",
-        first_day=1,
-        lampType="led",         # "led" or "hps" or "none"
-        gl_params=None,         # Change default parameters
-        isMature=False,         # Whether start from mature stage
-        controls_file=None,     # Control trajectories file
-        epw_path=None,          # Weather EPW file path
-        csv_path=None,          # Weather CSV file path
+            self,
+            filename="",
+            first_day=1,
+            lampType="led",  # "led" or "hps" or "none"
+            gl_params=None,  # Change default parameters
+            isMature=False,  # Whether start from mature stage
+            controls_file=None,  # Control trajectories file
+            epw_path=None,  # Weather EPW file path
+            csv_path=None,  # Weather CSV file path
     ):
         # Initialize the filename attribute
         self.filename = filename
@@ -87,7 +90,8 @@ class GreenLightModel:
         # Set the path to the CSV file
         self.csv_path = csv_path
 
-  
+        self.io_recorder = IORecorder()
+
     def _get_weather_data_path(self):
             """
             Determines the path to the weather data file, converting EPW to CSV if necessary and checking the CSV file.
@@ -218,7 +222,7 @@ class GreenLightModel:
         # Prepare weather data
         weather_data_path = self._get_weather_data_path()
         self.weather = self._load_weather_data(weather_data_path, season_length, start_row, end_row)
-        
+
         # Process elevation
         self._set_elevation()
 
@@ -235,14 +239,14 @@ class GreenLightModel:
         self._prepare_ode_parameters()
 
     def run_model(
-        self,
-        gl_params=None,
-        season_length=1 / 24,
-        season_interval=1 / 24 / 12,
-        step=0,
-        start_row=None,
-        end_row=None,
-        time_step=60
+            self,
+            gl_params=None,
+            season_length=1 / 24,
+            season_interval=1 / 24 / 12,
+            step=0,
+            start_row=None,
+            end_row=None,
+            time_step=60
     ):
         """
         Runs the green light model and generates the results.
@@ -304,9 +308,9 @@ class GreenLightModel:
 
         # Set the solver method
         solver = "BDF"  # Backward Differentiation Formula
-        
+
         # Create an instance of ODESolver
-        solver_instance = ODESolver(self.d, self.u, self.gl)
+        solver_instance = ODESolver(self.d, self.u, self.gl, self.io_recorder)
 
         # Solve the differential equations and generate the results
         sol = solve_ivp(
@@ -320,6 +324,6 @@ class GreenLightModel:
 
         # Change the time resolution of the results, set the time step, and generate the model results
         self.gl = change_res(self.gl, self.d, sol, time_step)
-        
+
         # Return the simulation results
         return self.gl

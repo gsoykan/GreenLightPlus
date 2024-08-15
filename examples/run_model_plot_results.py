@@ -1,3 +1,6 @@
+import os
+from datetime import datetime
+
 from core.green_light_model import GreenLightModel
 from result_analysis.plot_green_light import plot_green_light
 from service_functions.funcs import extract_last_value_from_nested_dict, calculate_energy_consumption
@@ -16,6 +19,13 @@ if __name__ == '__main__':
     model = GreenLightModel(first_day=first_day,
                             isMature=True,
                             epw_path="../data/NLD_Amsterdam.062400_IWEC.epw")
+
+    # Base path where the IO records should be stored
+    io_record_path = "../data/io_records"
+    os.makedirs(io_record_path, exist_ok=True)
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    io_record_path = os.path.join(io_record_path, timestamp)
+    os.makedirs(io_record_path, exist_ok=True)
 
     # Initialize cumulative variables
     total_yield = 0  # Total yield (kg/m2)
@@ -60,6 +70,10 @@ if __name__ == '__main__':
                              season_length=season_length,
                              season_interval=season_interval,
                              step=current_step)
+
+        current_io_record_path = os.path.join(io_record_path, f"io_record_step_{str(current_step)}.csv")
+        model.io_recorder.save_dataset(current_io_record_path)
+
         init_state = gl
         dmc = 0.06  # dry matter content
 
