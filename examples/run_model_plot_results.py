@@ -7,7 +7,7 @@ from service_functions.funcs import extract_last_value_from_nested_dict, calcula
 
 # Set simulation parameters
 season_length = 10  # Length of the growth cycle (days), can be fractional
-season_interval = 2  # Time interval for each model run (days), can be fractional, e.g., 1/24/4 means 15 minutes
+season_interval = 10  # Time interval for each model run (days), can be fractional, e.g., 1/24/4 means 15 minutes
 first_day = 91  # The first day of the growth cycle (day of the year)
 
 if __name__ == '__main__':
