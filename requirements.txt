@@ -7,3 +7,4 @@ scipy==1.14.0
 gdown==5.2.0
 ray[rllib]==2.32.0
 torch==2.4.0
+tqdm==4.66.4
