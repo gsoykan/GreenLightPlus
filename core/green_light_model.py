@@ -49,7 +49,7 @@ class GreenLightModel:
         isMature (bool): Whether start from mature stage (default is False).
         controls_file (str): Control trajectories file (default is None).
         epw_path (str): EPW file path (default is None).
-        artificialWeather (bool): Whether to use artificial weather data (default is False).
+        use_artificial_weather_data (bool): Whether to use artificial weather data (default is False).
         controls (numpy.ndarray): Control strategies data (default is None).
         u (numpy.ndarray): 'u' parameter matrix for the ODE solver (default is None).
         weather (numpy.ndarray): Weather data.

@@ -82,8 +82,8 @@ if __name__ == '__main__':
         if episode % 5 == 0:
             checkpoint_dir = algo.save().checkpoint.path
             print(f"Checkpoint saved in directory {checkpoint_dir}")
-            print(f"Episode {episode}: Mean Reward = {result['episode_reward_mean']}, "
-                  f"Mean Length = {result['episode_len_mean']}")
+            print(f"Episode {episode}: Mean Reward = {result['env_runners']['episode_reward_mean']}, "
+                  f"Mean Length = {result['env_runners']['episode_len_mean']}")
 
     # Evaluate the model after training
     print("\nEvaluating trained model:")
