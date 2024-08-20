@@ -54,6 +54,7 @@ def create_green_light_model(lampType, weather, controls=None, indoor=None):
     weather_datenum = weather[0, 0]
 
     # Convert weather datenum to seconds from start time
+    # the unit of the time was day => now to seconds
     weather[:, 0] = (weather[:, 0] - weather[0, 0]) * 86400
 
     # Initialize an empty dictionary for the GreenLight model instance

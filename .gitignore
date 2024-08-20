@@ -162,3 +162,5 @@ cython_debug/
 
 !.gitkeep
 /examples/data/
+
+gl_net/glnet_model_best.pth
