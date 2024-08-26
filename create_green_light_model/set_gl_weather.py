@@ -57,7 +57,7 @@ class GreenLightWeather:
             weather_dates = [start_date + timedelta(seconds=x) for x in weatherInput[:, 0]]  # Convert seconds to datetime objects
 
             # add daily radiation sum
-            daily_radiation = day_light_sum(weather_dates, weatherInput[:, 1])  # Calculate daily radiation sum
+            daily_radiation = day_light_sum(weather_dates, weatherInput[:, 1], is_timedelta=True)  # Calculate daily radiation sum
             self.weatherInput = np.column_stack((weatherInput, daily_radiation))  # Add daily radiation sum as 9th column
         else:
             self.weatherInput = weatherInput  # Use input as is if it already has 9 columns

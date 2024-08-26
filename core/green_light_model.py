@@ -68,6 +68,7 @@ class GreenLightModel:
             controls_file=None,  # Control trajectories file
             epw_path=None,  # Weather EPW file path
             csv_path=None,  # Weather CSV file path
+            mat_path=None,  # Weather MAT file path
             use_artificial_weather_data=False,
     ):
         # Initialize the filename attribute
@@ -90,25 +91,27 @@ class GreenLightModel:
         self.u = None
         # Set the path to the CSV file
         self.csv_path = csv_path
+        self.mat_path = mat_path
 
         self.io_recorder = IORecorder()
 
     def _get_weather_data_path(self):
-            """
-            Determines the path to the weather data file, converting EPW to CSV if necessary and checking the CSV file.
+        """
+        Determines the path to the weather data file, converting EPW to CSV if necessary and checking the CSV file.
 
-            Returns:
-                str: The path to the weather data file.
-            """
-            if self.csv_path is None:
-                print("Converting EPW file to CSV format...")
-                print(f"EPW path: {self.epw_path}")
-                # Convert EPW file to CSV format if CSV path is not provided
-                return convert_epw2csv(epw_path=self.epw_path, time_step=5)
-            else:
-                # Check and process the provided CSV file with the desired timestep (e.g., 5 minutes)
-                return check_csv(csv_path=self.csv_path, timestep=5)
-          
+        Returns:
+            str: The path to the weather data file.
+        """
+        if self.mat_path is not None:
+            return self.mat_path
+        elif self.csv_path is None:
+            print("Converting EPW file to CSV format...")
+            print(f"EPW path: {self.epw_path}")
+            # Convert EPW file to CSV format if CSV path is not provided
+            return convert_epw2csv(epw_path=self.epw_path, time_step=5)
+        else:
+            # Check and process the provided CSV file with the desired timestep (e.g., 5 minutes)
+            return check_csv(csv_path=self.csv_path, timestep=5)
 
     def _load_weather_data(self, path, season_length, start_row, end_row):
         """

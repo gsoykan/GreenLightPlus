@@ -50,6 +50,6 @@ def make_artificial_input(length):
 
     # convert timestamps to datenum
     weather[:, 0] = time / 86400 + 1
-    weather[:, 8] = day_light_sum(weather[:, 0], weather[:, 1])
+    weather[:, 8] = day_light_sum(weather[:, 0], weather[:, 1], is_timedelta=False)
 
     return weather

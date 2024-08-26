@@ -1,7 +1,14 @@
 # File path: GreenLightPlus/service_functions/cut_energy_plus_data.py
+import copy
+
 import scipy.io as sio
 import numpy as np
 import pandas as pd
+
+from service_functions.co2_ppm2dens import co2_ppm2dens
+from service_functions.rh2vapor_dens import rh2vapor_dens
+from service_functions.soil_temp_nl import soil_temp_nl
+from datetime import datetime, timedelta
 
 
 def cut_energy_plus_data_csv(first_day, season_length, csv_path):
@@ -86,12 +93,20 @@ def cut_energy_plus_data(first_day, season_length, path):
 
     # Load hi res seljaar
     mat_contents = sio.loadmat(path)
-    input_data = mat_contents["hiresWeather"]
-
-    # Cut out the required season
-    interval = (
-        input_data[1, 0] - input_data[0, 0]
-    ) * SECONDS_IN_DAY  # Assumes all data is equally spaced
+    try:
+        input_data = mat_contents["hiresWeather"]
+        # Cut out the required season
+        interval = (
+                           input_data[1, 0] - input_data[0, 0]
+                   ) * SECONDS_IN_DAY  # Assumes all data is equally spaced
+        reformat_data = False
+    except KeyError:
+        input_data = mat_contents['seljaarhires']
+        # Cut out the required season
+        interval = (
+                input_data[1, 0] - input_data[0, 0]
+        )  # Assumes all data is equally spaced
+        reformat_data = True
 
     year_shift = np.floor(first_day / 365)  # If first_day is bigger than 365
     first_day = first_day % 365  # In case value is bigger than 365
@@ -116,6 +131,35 @@ def cut_energy_plus_data(first_day, season_length, path):
         date_shift = reset_date + season[-1, 0]
         input_date_shift = np.column_stack((date_shift, input_data[:, 1:]))
         season = np.vstack((season, input_date_shift[:end_point, :]))
+
+    if reformat_data:
+        # INCREASE TEMPERATURE BY 1.5°C, TO FIT BETTER WITH MODERN CLIMATE!!!
+        CO2_PPM = 400 # assumed constant value of CO2 ppm
+        weather = np.zeros((len(season), 8))
+        # converting seconds to days...
+        weather[:, 0] = season[:, 0] / SECONDS_IN_DAY
+        weather[:, 1] = season[:, 1]  # radiation
+        weather[:, 2] = season[:, 3] + 1.5  # air temperature (increased by 1.5°C)
+        weather[:, 3] = rh2vapor_dens(weather[:, 2], season[:, 8])  # humidity
+        weather[:, 4] = co2_ppm2dens(weather[:, 2], CO2_PPM)  # co2 ppm
+        weather[:, 5] = season[:, 2]  # wind speed
+        weather[:, 6] = season[:, 4]  # sky temperature
+
+        # calculate soil temparature for NL
+        # TODO: @gsoykan - make it adaptable for different countries
+        start_time = (datetime(year=2000, month=1, day=1)
+                      + timedelta(days=first_day - 1))
+        # Convert start_time to seconds since the start of the year
+        def seconds_since_start_of_year(start_time):
+            start_of_year = datetime(year=start_time.year, month=1, day=1, hour=0, minute=0, second=0)
+            elapsed_time = start_time - start_of_year
+            return elapsed_time.total_seconds()
+
+        secs_in_year = seconds_since_start_of_year(start_time)
+        weather[:, 7] = soil_temp_nl(secs_in_year + weather[:, 0] * SECONDS_IN_DAY)  # Soil temperature
+        season = weather
+        # since weather is [L, 8]
+        #   daily radiation sum data and elevation will be set 0
 
     return season
 
@@ -143,7 +187,7 @@ def cut_energy_plus_data_csv_extreme(first_day, season_length, csv_path, is_summ
     """
     # Set random seed
     np.random.seed(42)
-    
+
     SECONDS_IN_DAY = 24 * 60 * 60
 
     # Read CSV file

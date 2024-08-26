@@ -2,7 +2,9 @@ from typing import Union, Tuple, List, Dict
 import numpy as np
 
 # GreenLightPlus/service_functions/day_light_sum.py
-def day_light_sum(time: Union[List[float], np.ndarray], rad: Union[List[float], np.ndarray]) -> np.ndarray:
+def day_light_sum(time: Union[List[float], np.ndarray],
+                  rad: Union[List[float], np.ndarray],
+                  is_timedelta: bool = False) -> np.ndarray:
     """
     Calculate the daily light sum from the sun [MJ m^{-2} day^{-1}].
 
@@ -16,8 +18,12 @@ def day_light_sum(time: Union[List[float], np.ndarray], rad: Union[List[float], 
     Returns:
         np.ndarray: Daily radiation sum, with the same timestamps as input (MJ m^{-2} day^{-1}).
     """
-    # Calculate the time interval in seconds
-    interval = (time[1] - time[0]) * 86400  # Convert from days to seconds
+    if is_timedelta:
+        interval = (time[1] - time[0]).total_seconds()
+        time = np.array(list(map(lambda t: (t - time[0]).total_seconds() / 86400, time)))
+    else:
+        # Calculate the time interval in seconds
+        interval = (time[1] - time[0]) * 86400  # Convert from days to seconds
 
     # Initialize the index for the midnight before the current point
     midnight_before = 0
