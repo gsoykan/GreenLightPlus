@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
+from torchinfo import summary
 from tqdm import tqdm
 
 from gl_net import IODataset, GLNetMLP
@@ -66,21 +67,27 @@ if __name__ == '__main__':
 
     # Create dataset and splits
     io_record_csv_path = "/Users/gsoykan/Desktop/yanan-desktop/wur-phd-2024/GreenLightPlus/data/io_records/20240819_115758/io_record_step_0.csv"
-    dataset = IODataset(io_record_csv_path)
+    dataset = IODataset(io_record_csv_path,
+                        rescale_d=True)
     train_size = int(0.9 * len(dataset))  # 90% for training
     val_size = int(0.05 * len(dataset))  # 5% for validation
     test_size = len(dataset) - train_size - val_size  # 5% for testing
     train_dataset, val_dataset, test_dataset = random_split(dataset, [train_size, val_size, test_size])
 
-    train_loader = DataLoader(train_dataset, batch_size=1024, shuffle=True, num_workers=4)
-    val_loader = DataLoader(val_dataset, batch_size=1024, shuffle=False, num_workers=4)
-    test_loader = DataLoader(test_dataset, batch_size=1024, shuffle=False, num_workers=4)
+    bsz = 256
+    train_loader = DataLoader(train_dataset, batch_size=bsz, shuffle=True, num_workers=4)
+    val_loader = DataLoader(val_dataset, batch_size=bsz, shuffle=False, num_workers=4)
+    test_loader = DataLoader(test_dataset, batch_size=bsz, shuffle=False, num_workers=4)
 
     model = GLNetMLP(
-        input_a_dims=None
+        input_a_dims=None,
+        input_p_dims=None,
+        arc_variation=2,
+        use_final_tanh=True
     ).to(device)
+    summary(model)
     criterion = nn.MSELoss()
-    optimizer = optim.SGD(model.parameters(), lr=1e-7)
+    optimizer = optim.AdamW(model.parameters(), lr=1e-5)
 
     # Training & Validation Loop
     num_epochs = 20
@@ -109,15 +116,17 @@ if __name__ == '__main__':
             loss.backward()
 
             # Apply gradient clipping
-            # torch.nn.utils.clip_grad_norm_(model.parameters(),
-            #                                   max_norm=5.0)
+            torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                           max_norm=1.0)
 
             optimizer.step()
             running_loss += loss.item()
             rmse = calculate_rmse(outputs, targets)
             running_rmse += rmse
 
-            progress_bar.set_postfix({'loss': running_loss / (i + 1), 'rmse': running_rmse / (i + 1)})
+            progress_bar.set_postfix({'step_loss': loss.item(),
+                                      'loss': running_loss / (i + 1),
+                                      'rmse': running_rmse / (i + 1)})
 
         epoch_loss = running_loss / len(train_loader)
         epoch_rmse = running_rmse / len(train_loader)

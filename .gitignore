@@ -166,3 +166,5 @@ cython_debug/
 gl_net/glnet_model_best.pth
 
 .DS_Store
+
+gl_net/glnet_model_final.pth

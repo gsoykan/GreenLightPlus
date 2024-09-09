@@ -36,10 +36,34 @@ def create_input_vectors(row: Series | Dict,
         'p': p,
     }
 
+def rescale_d_uncontrolled_inputs(dataset: pd.DataFrame,) -> pd.DataFrame:
+    """
+    check io_descriptions.md for how these values are calculated.
+    """
+    # Define ranges for min-max scaling
+    scaling_ranges = {
+        'd_iGlob': (0, 1200),
+        'd_tOut': (-40, 50),
+        'd_vpOut': (0, 7300),
+        'd_co2Out': (250, 1000),
+        'd_wind': (0, 45),
+        'd_tSky': (-50, 30),
+        'd_tSoOut': (-5, 35),
+        'd_dayRadSum': (0, 40)
+    }
+
+    # min-max scaling
+    for column, (min_val, max_val) in scaling_ranges.items():
+        dataset[column] = (dataset[column] - min_val) / (max_val - min_val)
+
+    return dataset
 
 class IODataset(Dataset):
-    def __init__(self, io_record_path: str | Path):
+    def __init__(self,
+                 io_record_path: str | Path,
+                 rescale_d: bool = True):
         self.io_record_path = io_record_path
+        self.rescale_d = rescale_d
         self.io_df = self._setup_dataset(self.io_record_path)
         self.input_columns_dict, self.output_columns, self.time_column = self._get_input_output_columns(self.io_df)
 
@@ -56,6 +80,11 @@ class IODataset(Dataset):
 
         # TODO: @gsoykan - we need to do normalization and rescaling of the inputs somehow?
         #  maybe at least for some of it - like physical limits?
+        if self.rescale_d:
+            io_df = rescale_d_uncontrolled_inputs(io_df)
+
+        # no need to rescale "u (controlled inputs)" because they sit in 0-1 range already,
+        # since they are control params
 
         return io_df
 

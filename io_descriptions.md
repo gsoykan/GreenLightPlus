@@ -138,7 +138,7 @@ which are not directly captured in Mini-greenhouse’s simpler feature set.
 - **Daily Radiation Sum (d_dayRadSum)**:
   - 0 MJ m⁻² day⁻¹ corresponds to no solar radiation (e.g., polar night, extreme cloud cover).
   - 40 MJ m⁻² day⁻¹ corresponds to intense solar radiation (e.g., desert or tropical regions).
-  - Further research is needed, but [this document](https://pdf.sciencedirectassets.com/277910/1-s2.0-S1876610212X00092/1-s2.0-S1876610212009277/main.pdf) can provide more insights.
+  - Further research is needed, but [this paper, An Estimation of Solar Radiation using Robust Linear Regression Method](https://pdf.sciencedirectassets.com/277910/1-s2.0-S1876610212X00092/1-s2.0-S1876610212009277/main.pdf) can provide more insights.
 
 | Parameter | Description                                          | Unit          | Min Value | Max Value |
 |-----------|------------------------------------------------------|---------------|-----------|-----------|
