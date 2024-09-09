@@ -3,57 +3,6 @@ Mini-greenhouse by Efraim:
 features = ['time', 'global out', 'temp out', 'rh out', 'co2 out', 'ventilation', 'toplights', 'heater']
 target_variables = ['global in', 'temp in', 'rh in', 'co2 in']
 
-
-### Variables in State Space (from GreenLight Plus)
-| Parameter Number | Parameter Name      | Description                                                                 |
-|------------------|---------------------|-----------------------------------------------------------------------------|
-| 1                | Day of the year (day_of_year)  | Reflects seasonal changes, affecting light intensity and temperature differences |
-| 2                | Night temperature setpoint (tSpNight)  | Target temperature for the greenhouse at night                                |
-| 3                | Day temperature setpoint (tSpDay)  | Target temperature for the greenhouse during the day                          |
-| 4                | Day CO2 setpoint (co2SpDay)     | Target CO2 concentration during the day                                      |
-| 5                | Air CO2 concentration (co2Air)  | Current CO2 level inside the greenhouse                                      |
-| 6                | Air vapor pressure (vpAir)      | Humidity conditions inside the greenhouse                                    |
-| 7                | Air temperature (tAir)          | Actual temperature inside the greenhouse                                     |
-| 8                | Fruit dry weight (cFruit)       | Growth status of the crop fruits                                             |
-| 9                | Total maintenance respiration rate (mcOrgAir) | Crop's respiration metabolic rate                                             |
-| 10               | Net photosynthetic rate (mcAirBuf) | Crop's photosynthetic efficiency                                             |
-| 11               | Global radiation (iGlob)        | Intensity of solar radiation received in the greenhouse                      |
-| 12               | Outdoor temperature (tOut)      | Environmental temperature outside the greenhouse                             |
-| 13               | Lamp energy consumption (lampIn) | Energy consumption of artificial lighting                                    |
-| 14               | Boiler energy consumption (boilIn) | Energy consumption of the heating system                                    |
-
-### X: Inputs in GreenLight 
-| Parameter   | Description                                                                 |
-|-------------|-----------------------------------------------------------------------------|
-| `x_co2Air`  | CO2 concentration in the air [ppm]                                            |
-| `x_co2Top`  | CO2 concentration at the top [ppm]                                            |
-| `x_tAir`    | Air temperature [°C]                                                          |
-| `x_tTop`    | Temperature at the top [°C]                                                   |
-| `x_tCan`    | Canopy temperature [°C]                                                        |
-| `x_tCovIn`  | Temperature of the internal cover [°C]                                         |
-| `x_tThScr`  | Temperature of the thermal screen [°C]                                         |
-| `x_tFlr`    | Floor temperature [°C]                                                          |
-| `x_tPipe`   | Temperature of the pipe [°C]                                                   |
-| `x_tCovE`   | Temperature of the external cover [°C]                                         |
-| `x_tSo1`    | Temperature of soil layer 1 [°C]                                               |
-| `x_tSo2`    | Temperature of soil layer 2 [°C]                                               |
-| `x_tSo3`    | Temperature of soil layer 3 [°C]                                               |
-| `x_tSo4`    | Temperature of soil layer 4 [°C]                                               |
-| `x_tSo5`    | Temperature of soil layer 5 [°C]                                               |
-| `x_vpAir`   | Vapor pressure in the air [Pa]                                                 |
-| `x_vpTop`   | Vapor pressure at the top [Pa]                                                 |
-| `x_tCan24`  | Average canopy temperature over 24 hours [°C]                                  |
-| `x_time`    | Time [s]                                                                       |
-| `x_tLamp`   | Temperature of the lamp [°C]                                                   |
-| `x_tGroPipe`| Temperature of the growth pipe [°C]                                            |
-| `x_tIntLamp`| Temperature of the internal lamp [°C]                                          |
-| `x_tBlScr`  | Temperature of the blind screen [°C]                                           |
-| `x_cBuf`    | Carbohydrates in the buffer [mg CH2O m^{-2}]                                   |
-| `x_cLeaf`   | Carbohydrates in the leaves [mg CH2O m^{-2}]                                   |
-| `x_cStem`   | Carbohydrates in the stem [mg CH2O m^{-2}]                                    |
-| `x_cFruit`  | Carbohydrates in the fruit [mg CH2O m^{-2}]                                    |
-| `x_tCanSum` | Accumulated canopy temperature [°C days]                                       |
-
 ### Mini-Greenhouse to GreenLight Mapping
 
 | **Mini-Greenhouse** | **Description**                                                 | **GreenLight Corresponding Input/Output**             |
@@ -105,9 +54,124 @@ in GreenLight due to differences in model focus and parameterization.
 For instance, GreenLight may focus more on internal climate modeling and complex interactions 
 which are not directly captured in Mini-greenhouse’s simpler feature set.
 
-### Descriptions for other params for GreenLight
+### Variables in State Space (from GreenLight Plus)
+| Parameter Number | Parameter Name      | Description                                                                 |
+|------------------|---------------------|-----------------------------------------------------------------------------|
+| 1                | Day of the year (day_of_year)  | Reflects seasonal changes, affecting light intensity and temperature differences |
+| 2                | Night temperature setpoint (tSpNight)  | Target temperature for the greenhouse at night                                |
+| 3                | Day temperature setpoint (tSpDay)  | Target temperature for the greenhouse during the day                          |
+| 4                | Day CO2 setpoint (co2SpDay)     | Target CO2 concentration during the day                                      |
+| 5                | Air CO2 concentration (co2Air)  | Current CO2 level inside the greenhouse                                      |
+| 6                | Air vapor pressure (vpAir)      | Humidity conditions inside the greenhouse                                    |
+| 7                | Air temperature (tAir)          | Actual temperature inside the greenhouse                                     |
+| 8                | Fruit dry weight (cFruit)       | Growth status of the crop fruits                                             |
+| 9                | Total maintenance respiration rate (mcOrgAir) | Crop's respiration metabolic rate                                             |
+| 10               | Net photosynthetic rate (mcAirBuf) | Crop's photosynthetic efficiency                                             |
+| 11               | Global radiation (iGlob)        | Intensity of solar radiation received in the greenhouse                      |
+| 12               | Outdoor temperature (tOut)      | Environmental temperature outside the greenhouse                             |
+| 13               | Lamp energy consumption (lampIn) | Energy consumption of artificial lighting                                    |
+| 14               | Boiler energy consumption (boilIn) | Energy consumption of the heating system                                    |
 
-A: Auxiliary States
+# GreenLight Input Descriptions
+
+### X: Inputs in GreenLight 
+| Parameter   | Description                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| `x_co2Air`  | CO2 concentration in the air [ppm]                                            |
+| `x_co2Top`  | CO2 concentration at the top [ppm]                                            |
+| `x_tAir`    | Air temperature [°C]                                                          |
+| `x_tTop`    | Temperature at the top [°C]                                                   |
+| `x_tCan`    | Canopy temperature [°C]                                                        |
+| `x_tCovIn`  | Temperature of the internal cover [°C]                                         |
+| `x_tThScr`  | Temperature of the thermal screen [°C]                                         |
+| `x_tFlr`    | Floor temperature [°C]                                                          |
+| `x_tPipe`   | Temperature of the pipe [°C]                                                   |
+| `x_tCovE`   | Temperature of the external cover [°C]                                         |
+| `x_tSo1`    | Temperature of soil layer 1 [°C]                                               |
+| `x_tSo2`    | Temperature of soil layer 2 [°C]                                               |
+| `x_tSo3`    | Temperature of soil layer 3 [°C]                                               |
+| `x_tSo4`    | Temperature of soil layer 4 [°C]                                               |
+| `x_tSo5`    | Temperature of soil layer 5 [°C]                                               |
+| `x_vpAir`   | Vapor pressure in the air [Pa]                                                 |
+| `x_vpTop`   | Vapor pressure at the top [Pa]                                                 |
+| `x_tCan24`  | Average canopy temperature over 24 hours [°C]                                  |
+| `x_time`    | Time [s]                                                                       |
+| `x_tLamp`   | Temperature of the lamp [°C]                                                   |
+| `x_tGroPipe`| Temperature of the growth pipe [°C]                                            |
+| `x_tIntLamp`| Temperature of the internal lamp [°C]                                          |
+| `x_tBlScr`  | Temperature of the blind screen [°C]                                           |
+| `x_cBuf`    | Carbohydrates in the buffer [mg CH2O m^{-2}]                                   |
+| `x_cLeaf`   | Carbohydrates in the leaves [mg CH2O m^{-2}]                                   |
+| `x_cStem`   | Carbohydrates in the stem [mg CH2O m^{-2}]                                    |
+| `x_cFruit`  | Carbohydrates in the fruit [mg CH2O m^{-2}]                                    |
+| `x_tCanSum` | Accumulated canopy temperature [°C days]                                       |
+
+
+
+### D: Uncontrolled Inputs (Disturbances)
+
+- **Global Irradiance (iGlob)**: Check max values and dive deeper into the [wiki link](https://en.wikipedia.org/wiki/Solar_irradiance).
+  
+- **Temperature**:
+  - Reasonable Range for Normalization: -40°C to 50°C
+  - You can apply Min-Max scaling: \((t - \text{min}) / (\text{max} - \text{min})\)
+
+- **Outdoor Vapor Pressure (d_vpOut)**:
+  - At 40°C (104°F), the maximum possible vapor pressure is around 73 mb or 7.3 kPa.
+  - Check the formula and ensure it’s correct for your use case.
+
+- **Outdoor CO2 Concentration (d_co2Out)**:
+  - [Source 1](https://www.co2meter.com/blogs/news/carbon-dioxide-indoor-levels-chart?srsltid=AfmBOopwsMiefU1B2OYGQBcQ0Mo1pbiQPSbmc8gYvyT2GeGoSBKXZkYS) and [Source 2](https://www.kane.co.uk/knowledge-centre/what-are-safe-levels-of-co-and-co2-in-rooms)
+  - Range: 250-500 ppm, but values around 800 ppm have been recorded, so consider using 250-1000 ppm for the range.
+
+- **Outdoor Wind Speed (d_wind)**:
+  - Maximum wind speed can be roughly 100 mph (45 m/s).
+
+- **Outdoor Temperature (d_tOut)**:
+  - Reasonable Range: -50°C to 30°C for normalization.
+
+- **Outdoor Soil Temperature (d_tSoOut)**:
+  - Based on [this source](https://eos.com/blog/soil-temperature/#:~:text=The%20average%20soil%20temperatures%20for,of%20soluble%20substances%2C%20and%20metabolism.):
+    - Optimal range is 10°C to 24°C.
+    - For normalization, use a broader range: -5°C to 35°C.
+
+- **Daily Radiation Sum (d_dayRadSum)**:
+  - 0 MJ m⁻² day⁻¹ corresponds to no solar radiation (e.g., polar night, extreme cloud cover).
+  - 40 MJ m⁻² day⁻¹ corresponds to intense solar radiation (e.g., desert or tropical regions).
+  - Further research is needed, but [this document](https://pdf.sciencedirectassets.com/277910/1-s2.0-S1876610212X00092/1-s2.0-S1876610212009277/main.pdf) can provide more insights.
+
+| Parameter | Description                                          | Unit          | Min Value | Max Value |
+|-----------|------------------------------------------------------|---------------|-----------|-----------|
+| `d_iGlob` | Global irradiance                                    | W m^{-2}      | 0         | 1200      |
+| `d_tOut`  | Outdoor temperature                                  | °C            | -40       | 50        |
+| `d_vpOut` | Outdoor vapor pressure                              | Pa            | 0         | 7300      |
+| `d_co2Out`| Outdoor CO2 concentration                           | ppm           | 250       | 100       |
+| `d_wind`  | Outdoor wind speed                                  | m s^{-1}      | 0         | 45        |
+| `d_tSky`  | Sky temperature                                     | °C            | -50       | 30        |
+| `d_tSoOut`| Outdoor soil temperature                            | °C            | -5        | 35        |
+| `d_dayRadSum` | Daily radiation sum                              | MJ m^{-2} day^{-1} | 0         | 40        |
+| `d_isDay` | Indicator for whether it is daytime (binary)        |               | 0         | 1         |
+| `d_isDaySmooth` | Smoothed indicator for whether it is daytime (binary) |           | 0         | 1         |
+
+
+### U: (Controlled Inputs)
+
+| Parameter | Description | Unit | Min Value | Max Value |
+| --- | --- | --- | --- | --- |
+| `u_boil` | Boiler control value | - | 0 (closed) | 1 (full capacity) |
+| `u_boilGro` | Grow pipe boiler control value | - | 0 (closed) | 1 (full capacity) |
+| `u_extCo2` | External CO2 control value | - | 0 (closed) | 1 (full capacity) |
+| `u_shScr` | Shadow screen control value | - | 0 (open/folded) | 1 (closed/spread out) |
+| `u_shScrPer` | Perforated shadow screen control value | - | 0 (open/folded) | 1 (closed/spread out) |
+| `u_thScr` | Thermal screen control value | - | 0 (open/folded) | 1 (closed/spread out) |
+| `u_roof` | Roof vent control value | - | 0 (closed) | 1 (open/maximal ventilation) |
+| `u_side` | Side vent control value | - | 0 (closed) | 1 (open/maximal ventilation) |
+| `u_lamp` | Lamp control value | - | 0 (off) | 1 (on) |
+| `u_intLamp` | Interlight control value | - | 0 (off) | 1 (on) |
+| `u_blScr` | Blackout screen control value | - | 0 (open/folded) | 1 (closed/spread out) |
+
+
+### A: Auxiliary States
 
 | Parameter Name                          | Description                                                            | Units              | Min Value | Max Value |
 |----------------------------------------|------------------------------------------------------------------------|--------------------|-----------|-----------|
@@ -406,22 +470,7 @@ A: Auxiliary States
 | `a_hBufHotPipe`                        | Heat transfer coefficient for hot buffer pipe                          |                    |           |           |
 
 
-D: uncontrolled inputs (disturbances)
-
-| Parameter | Description                                          | Unit           | Min Value | Max Value |
-|-----------|------------------------------------------------------|----------------|-----------|-----------|
-| `d_iGlob` | Global irradiance                                    | W m^{-2}       |           |           |
-| `d_tOut`  | Outdoor temperature                                  | °C             |           |           |
-| `d_vpOut` | Outdoor vapor pressure                              | kPa            |           |           |
-| `d_co2Out`| Outdoor CO2 concentration                           | ppm            |           |           |
-| `d_wind`  | Outdoor wind speed                                  | m s^{-1}       |           |           |
-| `d_tSky`  | Sky temperature                                     | °C             |           |           |
-| `d_tSoOut`| Outdoor soil temperature                            | °C             |           |           |
-| `d_dayRadSum` | Daily radiation sum                              | MJ m^{-2} day^{-1} |       |           |
-| `d_isDay` | Indicator for whether it is daytime (binary)        |                | 0         | 1         |
-| `d_isDaySmooth` | Smoothed indicator for whether it is daytime (binary) |           | 0         | 1         |
-
-P: Parameters (constants)
+### P: Parameters (constants)
 
 | Parameter | Description | Unit | Min Value | Max Value |
 |-----------|-------------|------|-----------|-----------|
@@ -680,20 +729,3 @@ P: Parameters (constants)
 | p_rCanSp | Radiation value above the canopy when night becomes day | W m⁻² | - | - |
 | p_cLeakTop | Fraction of leakage ventilation going from the top | - | - | - |
 | p_minWind | Wind speed where the effect of wind on leakage begins | m s⁻¹ | - | - |
-
-
-U: (Controlled Inputs)
-
-| Parameter | Description | Unit | Min Value | Max Value |
-| --- | --- | --- | --- | --- |
-| `u_boil` | Boiler control value | - | 0 (closed) | 1 (full capacity) |
-| `u_boilGro` | Grow pipe boiler control value | - | 0 (closed) | 1 (full capacity) |
-| `u_extCo2` | External CO2 control value | - | 0 (closed) | 1 (full capacity) |
-| `u_shScr` | Shadow screen control value | - | 0 (open/folded) | 1 (closed/spread out) |
-| `u_shScrPer` | Perforated shadow screen control value | - | 0 (open/folded) | 1 (closed/spread out) |
-| `u_thScr` | Thermal screen control value | - | 0 (open/folded) | 1 (closed/spread out) |
-| `u_roof` | Roof vent control value | - | 0 (closed) | 1 (open/maximal ventilation) |
-| `u_side` | Side vent control value | - | 0 (closed) | 1 (open/maximal ventilation) |
-| `u_lamp` | Lamp control value | - | 0 (off) | 1 (on) |
-| `u_intLamp` | Interlight control value | - | 0 (off) | 1 (on) |
-| `u_blScr` | Blackout screen control value | - | 0 (open/folded) | 1 (closed/spread out) |
