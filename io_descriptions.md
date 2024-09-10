@@ -25,6 +25,12 @@ target_variables = ['global in', 'temp in', 'rh in', 'co2 in']
 | `rh in`             | Indoor relative humidity [%]                                     | (No direct equivalent; could be related to internal humidity modeling) |
 | `co2 in`            | Indoor CO2 concentration [ppm]                                   | (No direct equivalent; could be related to internal CO2 concentration modeling) |
 
+
+- The equivalent values for most of above (except global-in) (some calculated, some derived from auxiliary states) can be seen in the `plot_green_light` function.
+- [ ] Check if indoor global radiation can be calculated with what we have? 
+- [ ] Design a mini-greenhouse NN model using those values.
+
+
 ### Seljaar Weather Data
 Columns:
 
@@ -71,6 +77,43 @@ which are not directly captured in Mini-greenhouse’s simpler feature set.
 | 12               | Outdoor temperature (tOut)      | Environmental temperature outside the greenhouse                             |
 | 13               | Lamp energy consumption (lampIn) | Energy consumption of artificial lighting                                    |
 | 14               | Boiler energy consumption (boilIn) | Energy consumption of the heating system                                    |
+
+# GreenLight "Indoor" Inputs
+
+The function `set_gl_states_init(gl, weather_datenum, indoor=None)` allows the initialization of indoor conditions for the GreenLight model.
+
+### `indoor` (Optional[np.ndarray])
+An optional 3-column matrix where:
+
+- `indoor[:, 0]`: **Timestamps** of the input [s], in regular intervals of 300, starting with 0.
+- `indoor[:, 1]`: **Temperature** [°C], representing the indoor air temperature.
+- `indoor[:, 2]`: **Vapor Pressure** [Pa], representing the indoor vapor concentration.
+- `indoor[:, 3]`: **CO2 Concentration** [mg m^{-3}], representing the indoor CO2 concentration.
+
+### Example Usage:
+```python
+if indoor is not None and len(indoor) > 0:
+    # Use provided indoor data to set initial conditions
+    gl["x"]["co2Air"] = indoor[0, 3]  # Set initial indoor CO2 concentration
+    gl["x"]["tAir"] = indoor[0, 1]    # Set initial indoor air temperature
+    gl["x"]["vpAir"] = indoor[0, 2]   # Set initial indoor vapor pressure
+else:
+    # Set default initial conditions when indoor data is not provided
+    gl["x"]["tAir"] = gl["p"]["tSpNight"]  # Default indoor air temperature (night setpoint)
+    gl["x"]["vpAir"] = gl["p"]["rhMax"] / 100 * satVp(gl["x"]["tAir"])  # Calculate vapor pressure using max relative humidity
+    gl["x"]["co2Air"] = gl["d"]["co2Out"][0, 1]  # Set CO2 concentration to outdoor level
+```
+
+- Interestingly, the docstring for the function indicates that:
+
+> If `indoor` is not provided, the initial values are set to default values of 21°C for indoor temperature, 1000 Pa for vapor pressure, and 400 mg/m³ for CO2 concentration.
+
+However, **this is not the case** in the actual implementation. Instead:
+
+- The indoor temperature is set to the **night setpoint** (`tSpNight`).
+- The vapor pressure is calculated using the **maximum relative humidity** (`rhMax`).
+- The CO2 concentration is set to the **outdoor CO2 level**.
+
 
 # GreenLight Input Descriptions
 
@@ -145,7 +188,7 @@ which are not directly captured in Mini-greenhouse’s simpler feature set.
 | `d_iGlob` | Global irradiance                                    | W m^{-2}      | 0         | 1200      |
 | `d_tOut`  | Outdoor temperature                                  | °C            | -40       | 50        |
 | `d_vpOut` | Outdoor vapor pressure                              | Pa            | 0         | 7300      |
-| `d_co2Out`| Outdoor CO2 concentration                           | ppm           | 250       | 100       |
+| `d_co2Out`| Outdoor CO2 concentration                           | ppm           | 250       | 1000      |
 | `d_wind`  | Outdoor wind speed                                  | m s^{-1}      | 0         | 45        |
 | `d_tSky`  | Sky temperature                                     | °C            | -50       | 30        |
 | `d_tSoOut`| Outdoor soil temperature                            | °C            | -5        | 35        |

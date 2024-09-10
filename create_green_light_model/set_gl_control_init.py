@@ -41,7 +41,7 @@ def set_gl_control_init(gl, controls=None):
 
     if controls is not None:
 
-        # 确保 controls 是 numpy 数组
+        # Ensure controls is a numpy array
         # controls = np.array(controls)
         # controls = controls.to_numpy()
 
@@ -49,32 +49,32 @@ def set_gl_control_init(gl, controls=None):
 
         time = controls[:, 0].reshape(-1, 1)
 
-        # 添加控制轨迹
+        # Add control trajectories
         u['thScr'] = np.hstack(
-            [time, controls[:, 1].reshape(-1, 1)])  # 注意索引的改变
+            [time, controls[:, 1].reshape(-1, 1)])  # Note the change of index
         u['blScr'] = np.hstack([time, controls[:, 2].reshape(-1, 1)])
         u['roof'] = np.hstack([time, controls[:, 3].reshape(-1, 1)])
 
-        # 管道温度作为输入
-        d['tPipe'] = np.hstack([time, controls[:, 4].reshape(-1, 1)])  # 修改索引
+        # Pipe temperature as input
+        d['tPipe'] = np.hstack([time, controls[:, 4].reshape(-1, 1)])  # Modify index
         d['tGroPipe'] = np.hstack([time, controls[:, 5].reshape(-1, 1)])
 
-        # 管道即将关闭的判断
+        # Check if the pipe is about to turn off
         result = (controls[:, 4] != 0) & (
             np.roll(controls[:, 4], shift=-1) == 0)
         d['pipeSwitchOff'] = np.hstack([time, result.reshape(-1, 1)])
 
-        # 生长管道即将关闭的判断
+        # Check if the grow pipe is about to turn off
         result = (controls[:, 5] != 0) & (
             np.roll(controls[:, 5], shift=-1) == 0)
         d['groPipeSwitchOff'] = np.hstack([time, result.reshape(-1, 1)])
 
-        # 其他未考虑的控制
+        # Other controls not considered
         u['lamp'] = np.hstack([time, controls[:, 6].reshape(-1, 1)])
         u['extCo2'] = np.hstack(
-            [time, controls[:, 8].reshape(-1, 1)])  # 索引可能需要调整
+            [time, controls[:, 8].reshape(-1, 1)])  # The index may need adjustment
         u['intLamp'] = np.hstack(
-            [time, controls[:, 7].reshape(-1, 1)])  # 索引可能需要调整
+            [time, controls[:, 7].reshape(-1, 1)])  # The index may need adjustment
         u['boil'] = np.hstack([time, np.zeros_like(time)])
         u['shScrPer'] = np.hstack([time, np.zeros_like(time)])
         u['side'] = np.hstack([time, np.zeros_like(time)])

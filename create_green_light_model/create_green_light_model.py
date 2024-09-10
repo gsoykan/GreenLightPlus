@@ -80,10 +80,10 @@ def create_green_light_model(lampType, weather, controls=None, indoor=None):
     gl = set_default_lamp_params(gl, lampType)
     
     # Set initial values of control variables - u for a GreenLight model instance
-    gl = set_gl_control_init(gl, controls)
+    gl = set_gl_control_init(gl, controls=controls)
     
     # Set initial values for the states 
-    gl = set_gl_states_init(gl, weather_datenum)
+    gl = set_gl_states_init(gl, weather_datenum, indoor=indoor)
     
     # Return the initialized GreenLight model
     return gl
