@@ -155,6 +155,9 @@ However, **this is not the case** in the actual implementation. Instead:
 - **x_cStem**: 275872,100691447 max value in the dataset
 - **x_cFruit**: 287017,21149939 max value in the dataset
 - **x_tCanSum**: 3204,87624137959 max value in the dataset
+- **x_tIntLamp**: maybe broken? because we have impossible values in the simulation output => 2.458691596984865e+99
+- [ ] This certainly needs debugging... 
+- SIMILAR ISSUE WITH THE **x_tBlScr** and **2.458691596984863e+307**
 
 Some issues
 - i predicted that x_co2Air would be 1000 at max, but in the dataset we have 1847.5690588668872 so i change it to 2000
