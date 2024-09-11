@@ -120,8 +120,8 @@ However, **this is not the case** in the actual implementation. Instead:
 ### X: Inputs in GreenLight
 | Parameter   | Description                                          | Unit          | Min Value | Max Value |
 |-------------|------------------------------------------------------|---------------|-----------|-----------|
-| `x_co2Air`  | CO2 concentration in the air                         | ppm           | 250       | 1000      |
-| `x_co2Top`  | CO2 concentration at the top                         | ppm           | 250       | 1000      |
+| `x_co2Air`  | CO2 concentration in the air                         | ppm           | 250       | 2000      |
+| `x_co2Top`  | CO2 concentration at the top                         | ppm           | 250       | 3000      |
 | `x_tAir`    | Air temperature                                      | °C            | -40       | 50        |
 | `x_tTop`    | Temperature at the top                               | °C            | -40       | 50        |
 | `x_tCan`    | Canopy temperature                                   | °C            | -10       | 50        |
@@ -155,6 +155,10 @@ However, **this is not the case** in the actual implementation. Instead:
 - **x_cStem**: 275872,100691447 max value in the dataset
 - **x_cFruit**: 287017,21149939 max value in the dataset
 - **x_tCanSum**: 3204,87624137959 max value in the dataset
+
+Some issues
+- i predicted that x_co2Air would be 1000 at max, but in the dataset we have 1847.5690588668872 so i change it to 2000
+- similar issue with x_co2Top the max is 2697.289469324912 so i change it to 3000
 
 ### Sensible Rationale for Min and Max Values:
 - **Carbohydrates**: The buffer values are estimated from plant biology research on carbon storage and transfer between plant organs.

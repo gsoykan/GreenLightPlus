@@ -64,8 +64,8 @@ def rescale_x_inputs(dataset: pd.DataFrame, ) -> pd.DataFrame:
     check io_descriptions.md for how these values are calculated.
     """
     scaling_ranges = {
-        'x_co2Air': (250, 1000),
-        'x_co2Top': (250, 1000),
+        'x_co2Air': (250, 2000),
+        'x_co2Top': (250, 3000),
         'x_tAir': (-40, 50),
         'x_tTop': (-40, 50),
         'x_tCan': (-10, 50),
@@ -109,7 +109,7 @@ class IODataset(Dataset):
         self.rescale_d = rescale_d
         self.rescale_x = rescale_x
         self.io_df = self._setup_dataset(self.io_record_path)
-        self.input_columns_dict, self.output_columns, self.time_column = self._get_input_output_columns(self.io_df)
+        self.input_columns_dict, self.output_columns, self.time_columns = self._get_input_output_columns(self.io_df)
 
     def _setup_dataset(self, io_record_path) -> DataFrame:
         io_df = pd.read_csv(io_record_path)
@@ -138,7 +138,7 @@ class IODataset(Dataset):
     def _get_input_output_columns(self, io_df: DataFrame) -> Tuple[
         Dict[str, List[str]],
         List[str],
-        List[str]]:
+        Tuple]:
         column_names = list(io_df.columns)
 
         column_groups = {}
@@ -148,9 +148,20 @@ class IODataset(Dataset):
 
         output_columns = column_groups.pop('dx')
         time_column = column_groups.pop('t')
+        time_column_x = 'x_time'
+        column_groups['x'].remove('x_time')
+        time_output_column = 'dx_18'
+        output_columns.remove('dx_18')
+
+        # x_tIntLamp and x_tBlScr might be broken?
+        column_groups['x'].remove('x_tIntLamp')
+        column_groups['x'].remove('x_tBlScr')
+        output_columns.remove('dx_21')
+        output_columns.remove('dx_22')
+
         input_columns_dict = column_groups
 
-        return input_columns_dict, output_columns, time_column
+        return input_columns_dict, output_columns, (time_column, time_column_x, time_output_column)
 
     def __len__(self):
         return len(self.io_df)
@@ -158,11 +169,11 @@ class IODataset(Dataset):
     def __getitem__(self, idx):
         row = self.io_df.iloc[idx]
 
-        # (28,)
+        # (25,)
         output_vector = create_output_vector(row, self.output_columns)
         output_vector = torch.from_numpy(output_vector).to(torch.float32)
 
-        # {'a': (293,), 'd': (10,), 'p': (254,), 'u': (11,), 'x': (28,)}
+        # {'a': (293,), 'd': (10,), 'p': (254,), 'u': (11,), 'x': (25,)}
         input_vector_dict = create_input_vectors(row, self.input_columns_dict)
         input_vector_dict = {k: torch.from_numpy(v).to(torch.float32) for k, v in input_vector_dict.items()}
 

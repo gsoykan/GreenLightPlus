@@ -68,7 +68,8 @@ if __name__ == '__main__':
     # Create dataset and splits
     io_record_csv_path = "/Users/gsoykan/Desktop/yanan-desktop/wur-phd-2024/GreenLightPlus/data/io_records/20240819_115758/io_record_step_0.csv"
     dataset = IODataset(io_record_csv_path,
-                        rescale_d=True)
+                        rescale_d=True,
+                        rescale_x=True)
     train_size = int(0.9 * len(dataset))  # 90% for training
     val_size = int(0.05 * len(dataset))  # 5% for validation
     test_size = len(dataset) - train_size - val_size  # 5% for testing
@@ -82,8 +83,8 @@ if __name__ == '__main__':
     model = GLNetMLP(
         input_a_dims=None,
         input_p_dims=None,
-        arc_variation=2,
-        use_final_tanh=True
+        arc_variation=1,
+        use_final_tanh=False
     ).to(device)
     summary(model)
     criterion = nn.MSELoss()
