@@ -36,11 +36,11 @@ def create_input_vectors(row: Series | Dict,
         'p': p,
     }
 
-def rescale_d_uncontrolled_inputs(dataset: pd.DataFrame,) -> pd.DataFrame:
+
+def rescale_d_uncontrolled_inputs(dataset: pd.DataFrame, ) -> pd.DataFrame:
     """
     check io_descriptions.md for how these values are calculated.
     """
-    # Define ranges for min-max scaling
     scaling_ranges = {
         'd_iGlob': (0, 1200),
         'd_tOut': (-40, 50),
@@ -58,12 +58,56 @@ def rescale_d_uncontrolled_inputs(dataset: pd.DataFrame,) -> pd.DataFrame:
 
     return dataset
 
+
+def rescale_x_inputs(dataset: pd.DataFrame, ) -> pd.DataFrame:
+    """
+    check io_descriptions.md for how these values are calculated.
+    """
+    scaling_ranges = {
+        'x_co2Air': (250, 1000),
+        'x_co2Top': (250, 1000),
+        'x_tAir': (-40, 50),
+        'x_tTop': (-40, 50),
+        'x_tCan': (-10, 50),
+        'x_tCovIn': (-10, 50),
+        'x_tThScr': (-10, 50),
+        'x_tFlr': (-10, 50),
+        'x_tPipe': (-10, 100),
+        'x_tCovE': (-40, 50),
+        'x_tSo1': (-30, 40),
+        'x_tSo2': (-30, 40),
+        'x_tSo3': (-30, 40),
+        'x_tSo4': (-30, 40),
+        'x_tSo5': (-30, 40),
+        'x_vpAir': (0, 7300),
+        'x_vpTop': (0, 7300),
+        'x_tCan24': (-10, 50),
+        'x_tLamp': (-10, 100),
+        'x_tGroPipe': (-10, 100),
+        'x_tIntLamp': (-10, 100),
+        'x_tBlScr': (-10, 50),
+        'x_cBuf': (0, 20000),
+        'x_cLeaf': (0, 100000),
+        'x_cStem': (0, 300000),
+        'x_cFruit': (0, 300000),
+        'x_tCanSum': (0, 3500)
+    }
+
+    # min-max scaling
+    for column, (min_val, max_val) in scaling_ranges.items():
+        dataset[column] = (dataset[column] - min_val) / (max_val - min_val)
+
+    return dataset
+
+
 class IODataset(Dataset):
     def __init__(self,
                  io_record_path: str | Path,
-                 rescale_d: bool = True):
+                 rescale_d: bool = True,
+                 rescale_x: bool = True, ):
         self.io_record_path = io_record_path
         self.rescale_d = rescale_d
+        self.rescale_x = rescale_x
         self.io_df = self._setup_dataset(self.io_record_path)
         self.input_columns_dict, self.output_columns, self.time_column = self._get_input_output_columns(self.io_df)
 
@@ -82,6 +126,9 @@ class IODataset(Dataset):
         #  maybe at least for some of it - like physical limits?
         if self.rescale_d:
             io_df = rescale_d_uncontrolled_inputs(io_df)
+
+        if self.rescale_x:
+            io_df = rescale_x_inputs(io_df)
 
         # no need to rescale "u (controlled inputs)" because they sit in 0-1 range already,
         # since they are control params

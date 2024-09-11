@@ -117,38 +117,48 @@ However, **this is not the case** in the actual implementation. Instead:
 
 # GreenLight Input Descriptions
 
-### X: Inputs in GreenLight 
-| Parameter   | Description                                                                 |
-|-------------|-----------------------------------------------------------------------------|
-| `x_co2Air`  | CO2 concentration in the air [ppm]                                            |
-| `x_co2Top`  | CO2 concentration at the top [ppm]                                            |
-| `x_tAir`    | Air temperature [°C]                                                          |
-| `x_tTop`    | Temperature at the top [°C]                                                   |
-| `x_tCan`    | Canopy temperature [°C]                                                        |
-| `x_tCovIn`  | Temperature of the internal cover [°C]                                         |
-| `x_tThScr`  | Temperature of the thermal screen [°C]                                         |
-| `x_tFlr`    | Floor temperature [°C]                                                          |
-| `x_tPipe`   | Temperature of the pipe [°C]                                                   |
-| `x_tCovE`   | Temperature of the external cover [°C]                                         |
-| `x_tSo1`    | Temperature of soil layer 1 [°C]                                               |
-| `x_tSo2`    | Temperature of soil layer 2 [°C]                                               |
-| `x_tSo3`    | Temperature of soil layer 3 [°C]                                               |
-| `x_tSo4`    | Temperature of soil layer 4 [°C]                                               |
-| `x_tSo5`    | Temperature of soil layer 5 [°C]                                               |
-| `x_vpAir`   | Vapor pressure in the air [Pa]                                                 |
-| `x_vpTop`   | Vapor pressure at the top [Pa]                                                 |
-| `x_tCan24`  | Average canopy temperature over 24 hours [°C]                                  |
-| `x_time`    | Time [s]                                                                       |
-| `x_tLamp`   | Temperature of the lamp [°C]                                                   |
-| `x_tGroPipe`| Temperature of the growth pipe [°C]                                            |
-| `x_tIntLamp`| Temperature of the internal lamp [°C]                                          |
-| `x_tBlScr`  | Temperature of the blind screen [°C]                                           |
-| `x_cBuf`    | Carbohydrates in the buffer [mg CH2O m^{-2}]                                   |
-| `x_cLeaf`   | Carbohydrates in the leaves [mg CH2O m^{-2}]                                   |
-| `x_cStem`   | Carbohydrates in the stem [mg CH2O m^{-2}]                                    |
-| `x_cFruit`  | Carbohydrates in the fruit [mg CH2O m^{-2}]                                    |
-| `x_tCanSum` | Accumulated canopy temperature [°C days]                                       |
+### X: Inputs in GreenLight
+| Parameter   | Description                                          | Unit          | Min Value | Max Value |
+|-------------|------------------------------------------------------|---------------|-----------|-----------|
+| `x_co2Air`  | CO2 concentration in the air                         | ppm           | 250       | 1000      |
+| `x_co2Top`  | CO2 concentration at the top                         | ppm           | 250       | 1000      |
+| `x_tAir`    | Air temperature                                      | °C            | -40       | 50        |
+| `x_tTop`    | Temperature at the top                               | °C            | -40       | 50        |
+| `x_tCan`    | Canopy temperature                                   | °C            | -10       | 50        |
+| `x_tCovIn`  | Temperature of the internal cover                    | °C            | -10       | 50        |
+| `x_tThScr`  | Temperature of the thermal screen                    | °C            | -10       | 50        |
+| `x_tFlr`    | Floor temperature                                    | °C            | -10       | 50        |
+| `x_tPipe`   | Temperature of the pipe                              | °C            | -10       | 100       |
+| `x_tCovE`   | Temperature of the external cover                    | °C            | -40       | 50        |
+| `x_tSo1`    | Temperature of soil layer 1                          | °C            | -30       | 40        |
+| `x_tSo2`    | Temperature of soil layer 2                          | °C            | -30        | 40        |
+| `x_tSo3`    | Temperature of soil layer 3                          | °C            | -30        | 40        |
+| `x_tSo4`    | Temperature of soil layer 4                          | °C            | -30        | 40        |
+| `x_tSo5`    | Temperature of soil layer 5                          | °C            | -30        | 40        |
+| `x_vpAir`   | Vapor pressure in the air                            | Pa            | 0         | 7300      |
+| `x_vpTop`   | Vapor pressure at the top                            | Pa            | 0         | 7300      |
+| `x_tCan24`  | Average canopy temperature over 24 hours             | °C            | -10       | 50        |
+| `x_time`    | Time                                                 | s             | N/A         | N/A       |
+| `x_tLamp`   | Temperature of the lamp                              | °C            | -10       | 100       |
+| `x_tGroPipe`| Temperature of the growth pipe                       | °C            | -10       | 100       |
+| `x_tIntLamp`| Temperature of the internal lamp                     | °C            | -10       | 100       |
+| `x_tBlScr`  | Temperature of the blind screen                      | °C            | -10       | 50        |
+| `x_cBuf`    | Carbohydrates in the buffer                          | mg CH₂O m⁻²   | 0         | 20000     |
+| `x_cLeaf`   | Carbohydrates in the leaves                          | mg CH₂O m⁻²   | 0         | 100000     |
+| `x_cStem`   | Carbohydrates in the stem                            | mg CH₂O m⁻²   | 0         | 300000     |
+| `x_cFruit`  | Carbohydrates in the fruit                           | mg CH₂O m⁻²   | 0         | 300000    |
+| `x_tCanSum` | Accumulated canopy temperature                       | °C days       | 0         | 3500      |
 
+- **For Soil Temperature**: https://www.weather.gov/ncrfc/LMI_SoilTemperatureDepthMaps (-30 & 40)
+- **x_cBuf**: 19632,164791189300 is the max in the current dataset, but may depend on the plant
+- **x_cLeaf**: 98162,84787508580 max value in the dataset
+- **x_cStem**: 275872,100691447 max value in the dataset
+- **x_cFruit**: 287017,21149939 max value in the dataset
+- **x_tCanSum**: 3204,87624137959 max value in the dataset
+
+### Sensible Rationale for Min and Max Values:
+- **Carbohydrates**: The buffer values are estimated from plant biology research on carbon storage and transfer between plant organs.
+- **Accumulated Canopy Temperature**: Accumulated temperature sums help in understanding growing degree days (GDD), influencing plant development.
 
 
 ### D: Uncontrolled Inputs (Disturbances)
